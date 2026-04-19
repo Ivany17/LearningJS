@@ -1,0 +1,51 @@
+Тема №3: Типи даних (Data Types) 📊
+У JavaScript типи даних визначаються автоматично під час присвоєння значення (динамічна типізація). 
+На відміну від C#, нам не потрібно писати int чи string — JS сам розуміє, що перед ним.
+
+Ми розглянемо 3 основні типи, які є фундаментом будь-якої програми:
+1. Число (Number) 🔢
+У JS немає поділу на int, float чи double. Усі числа (і цілі, і дробові) належать до одного типу — Number.
+let count = 10; — ціле число.
+let price = 99.99; — число з комою (використовуємо крапку).
+
+2. Рядок (String) 💬
+Це текстові дані. На відміну від C#, де char — це одинарні лапки, а string — подвійні, 
+у JavaScript одинарні '...' та подвійні "..." лапки абсолютно рівноцінні.
+let name = "Іван";
+let city = 'Kyiv';
+
+3. Булевий тип (Boolean) ✅/❌
+Логічний тип, який має лише два значення:
+true (істина)
+false (хибність)
+Використовується для перевірок (наприклад, чи користувач залогінений).
+
+Інструмент перевірки: typeof 🔍
+Якщо ти хочеш дізнатися, який тип даних міститься у змінній, використай оператор typeof.
+console.log(typeof 100); // виведе "number"
+console.log(typeof "100"); // виведе "string"
+
+📝 Завдання №3 (Data Types):
+Твоя мета — створити один файл і перевірити, як JS працює з цими типами.
+Створи три змінні: myAge (число), myName (рядок) та isStudent (булеве значення).
+Виведи в консоль значення кожної змінної, а наступним рядком — її тип через typeof.
+Експеримент: Створи змінну mystery і запиши в неї число в лапках (наприклад, "50"). Виведи в консоль її тип.
+Спроба зміни: Спробуй змінити значення myAge на текст (наприклад, myAge = "Twenty seven";) і знову виведи typeof myAge. 
+В JavaScript це дозволено, хоча в C# така операція викликала б помилку.
+
+✅ Рішення:
+let myAge = 27;
+let myName = "Ivan";
+let isStudent = false;
+
+console.log(myAge); // 27
+console.log(typeof myAge); // number
+console.log(myName); // Ivan
+console.log(typeof myName); // string
+console.log(isStudent); // false
+console.log(typeof isStudent); // boolean
+
+let mystery = "50";
+console.log(typeof mystery) // string
+myAge = "Twenty seven";
+console.log(typeof myAge); // string
