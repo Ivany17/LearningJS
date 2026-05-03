@@ -1,0 +1,110 @@
+Тема №19: Spread оператор (...) в об'єктах ⚡
+Уяви, що масив — це коробка з речами. Spread (три крапки) «відкриває» коробку і висипає її вміст кудись в інше місце.
+
+1. Копіювання та об'єднання масивів 🤝
+Замість того, щоб змінювати старий масив, ми створюємо новий і «висипаємо» туди елементи:
+const fruits = ["🍎", "🍌"];
+const moreFruits = [...fruits, "🥝", "🍊"]; 
+// moreFruits тепер ["🍎", "🍌", "🥝", "🍊"]
+
+2. Копіювання об'єктів 📦
+Це критично важливо, щоб не пошкодити оригінальні дані (принцип immutability):
+const user = { name: "Ivan", age: 25 };
+const updatedUser = { ...user, age: 26 }; 
+// age перезапишеться, а name залишиться з оригіналу
+
+3. Об'єднання та перезапис
+const baseStats = { hp: 100, mp: 50 };
+const warrior = { ...baseStats, hp: 150, class: "Warrior" }; 
+// hp буде 150, бо останнє значення перезаписує попереднє
+
+📝 Завдання №19.1: (Модернізація персонажа):
+Створи об'єкт baseRobot з властивостями: model: "T-800", battery: 100.
+Створи об'єкт battleRobot, використовуючи оператор spread, щоб скопіювати все з baseRobot.
+У battleRobot одночасно:
+Додай нову властивість weapon: "Laser".
+Перезапиши battery на 200.
+Виведи в консоль обидва об'єкти окремо. Переконайся, що у першого робота battery залишилася 100.
+
+✅ Рішення:
+const baseRobot = {
+    model: "T-800",
+    battery: 100,
+}
+
+const battleRobot = {
+    ...baseRobot,
+    weapon: "Laser",
+    battery: 200,
+}
+
+console.log(baseRobot); // { model: 'T-800', battery: 100 }
+console.log(battleRobot); // { model: 'T-800', battery: 200, weapon: 'Laser' }
+
+📝 Завдання №19.2: Фабрика дронів 🤖
+У цьому завданні ми створимо "батьківський" об'єкт і на його основі сформуємо масив із трьох різних спеціалізованих дронів.
+Створи базовий об'єкт droneTemplate:
+firmware: "v1.0".
+status: "active".
+battery: 100.
+Створи масив droneArmy, який буде містити три об'єкти, створені за допомогою spread (...droneTemplate):
+Перший дрон (Розвідник): додай йому type: "scout" та sensorRange: "500m".
+Другий дрон (Вантажний): додай йому type: "cargo" та перезапиши battery на 200.
+Третій дрон (Ремонтник): додай йому type: "repair" та нову властивість tools: ["welder", "wrench"].
+Використай .forEach(), щоб вивести в консоль характеристики кожного дрона у форматі:
+"Дрон типу [type] має прошивку [firmware] та батарею [battery]%".
+Виведи весь масив droneArmy в консоль в самому кінці.
+
+✅ Рішення:
+const droneTemplate = {
+    firmware: "v1.0",
+    status: "active",
+    battery: 100,
+}
+
+const droneArmy = [
+    { ...droneTemplate, type: "scout", sensorRange: "500m" },
+    { ...droneTemplate, type: "cargo", battery: 200 },
+    { ...droneTemplate, type: "repair", tools: ["welder", "wrench"] },
+];
+
+droneArmy.forEach(drone => {
+    console.log(`Дрон типу ${drone.type} має прошивку ${drone.firmware} та батарею ${drone.battery}%`);
+})
+
+console.log(droneArmy);
+
+📝 Завдання №19.3: Керування складом 📦
+Уяви, що ми маємо систему керування інвентарем. У нас є базовий товар, і нам потрібно створити його копію з оновленими даними.
+Початкові дані: Створи об'єкт product, де будуть id, title, масив tags і об'єкт specs, в якому в свою чергу будуть color і dpi.
+Завдання: Створи новий об'єкт updatedProduct за допомогою Spread (...).
+Логіка оновлення:
+Скопіюй усі властивості з product.
+Зміни title на "Gaming Mouse PRO".
+Увага, складний момент: Додай у масив tags нове значення "pro", але так, щоб старі теги (tech, gaming) теж залишилися. 
+Тобі потрібно використати Spread всередині нового масиву tags: [...].
+Зміни dpi всередині об'єкта specs на 8000. Тут також знадобиться Spread для specs, щоб не видалити color.
+Результат: Виведи обидва об'єкти в консоль. Переконайся, що в оригінальному product колір залишився, а теги не змінилися.
+
+✅ Рішення:
+const product = {
+    id: 101,
+    title: "Gaming Mouse",
+    specs: {
+        color: "Black",
+        dpi: 4000
+    },
+    tags: ["tech", "gaming"]
+};
+
+const updatedProduct = {
+    ...product,
+    title: "Gaming Mouse PRO",
+    tags: [...product.tags, "pro"],
+    specs: {
+        ...product.specs,
+        dpi: 8000
+    }
+}
+
+console.log(updatedProduct);
