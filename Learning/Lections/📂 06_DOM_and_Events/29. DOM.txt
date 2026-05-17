@@ -1,0 +1,280 @@
+Тема №29: DOM. Пошук елементів (DOM. Selecting Elements) 🌐
+🌐 Що таке DOM?
+DOM (Document Object Model) — це перетворення HTML-сторінки на дерево об'єктів, яким може керувати JavaScript. 
+Коли браузер завантажує твій HTML-файл, він створює в пам'яті копію кожного тегу у вигляді об'єкта. 
+JS може ці об'єкти шукати, видаляти, змінювати їм кольори чи текст.
+
+🔌 Як пов'язати HTML та JavaScript?
+Щоб твій JS-код почав керувати сторінкою, його потрібно підключити всередині HTML-файлу. Для цього використовується тег <script>.
+Найкраще підключати його в самому кінці тегу <body>, щоб спочатку завантажилися всі візуальні елементи, а вже потім виконувався код.
+Приклад підключення: <script src="app.js"></script> (де app.js — назва твого JS-файлу).
+
+🎯 Звідки беруться селектори для пошуку?
+JavaScript не вигадує назви елементів. Він бере їх прямо з HTML. Для пошуку використовуються CSS-селектори. 
+Це загальноприйнята система в усьому вебі:
+🏷️ Пошук за тегом: Якщо шукаємо стандартний тег (наприклад, кнопку <button> чи абзац <p>), у JS ми пишемо просто ім'я тегу: 'button' або 'p'.
+🔴 Пошук за класом: Класи розробник придумує сам для стилів чи логіки (наприклад, class="main-btn"). 
+Щоб JS зрозумів, що це клас, перед назвою обов'язково ставиться крапка: '.main-btn'.
+🆔 Пошук за ID: Унікальний ідентифікатор елемента (наприклад, id="page-title"). 
+Щоб JS зрозумів, що це ID, перед назвою обов'язково ставиться решітка: '#page-title'.
+
+🔍 Сучасні методи пошуку в JavaScript:
+Всі пошуки починаються з глобального об'єкта document, який представляє всю твою сторінку.
+document.querySelector('селектор') — шукає і повертає один найперший елемент на сторінці, який підійшов під умови пошуку.
+document.querySelectorAll('селектор') — шукає і повертає всі елементи на сторінці у вигляді колекції (подібної до масиву).
+
+Тема №2: Запуск JS у браузері та консоль розробника (Running JS in Browser and DevTools) 🌐
+Браузер (Google Chrome, Microsoft Edge тощо) — це природне середовище для JavaScript. 
+Саме всередині браузера існує той самий об'єкт document, який ми намагаємося викликати.
+
+Ось, як виглядає звичайний html код, що знаходиться у файлі index.html який тобі треба буде створити і з яким ми будемо працювати 
+У VS Code у тій же папці, де лежить твій app.js, створи новий файл з назвою index.html та встав у нього цей код:
+
+HTML
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Вивчення DOM</title>
+</head>
+<body>
+
+    <h1 id="main-title">Вітаємо у світі DOM!</h1>
+    <p class="text-info">Це перший абзац з важливою інформацією.</p>
+    <p class="text-info">Це другий абзац для кількості.</p>
+    
+    <button class="action-btn">Натисни мене</button>
+    <button class="action-btn">Або мене</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+🖥️ Як відкрити HTML-файл у браузері:
+Відкрий звичайний провідник Windows (папку, де лежать твої файли проекту).
+Знайди свій файл index.html.
+Двічі клацни на нього — він відкриється як звичайна інтернет-сторінка у твоєму браузері. 
+Ти побачиш білий екран із текстом заголовка, двома абзацами та кнопками.
+
+🛠️ Де шукати результат роботи console.log()?
+Оскільки консоль Node.js у VS Code нам більше не потрібна для DOM, 
+ми будемо дивитися на виведення коду прямо в браузері через Інструменти розробника (DevTools):
+Коли сторінка index.html відкрита в браузері, натисни клавішу F12 
+(або правий клік мишки у будь-якому місці сторінки ➡️ Переглянути код / Подивитися код елемента).
+У вікні, що відкриється (зазвичай справа або знизу), знайди вкладку Console (Консоль).
+Саме там ти побачиш результати роботи своїх функцій console.log(pageTitle) тощо. 
+При наведенні мишкою на ці об'єкти в консолі браузера, вони будуть підсвічуватися на реальній сторінці!\
+
+✏️ Що таке .textContent?
+Це властивість об'єкта елемента, яка містить у собі весь текст, що знаходиться всередині HTML-тегу. 
+Ми можемо як читати цей текст, так і перезаписувати його.
+
+🔹 Як це працює на практиці?
+Спочатку ми знаходимо елемент і зберігаємо його у змінну.
+Через крапку звертаємося до властивості .textContent.
+За допомогою знака дорівнює = присвоюємо новий рядок.
+// 1. Знаходимо заголовок
+const mainHeader = document.querySelector('#main-title');
+
+// 2. Змінюємо його текст на новий
+mainHeader.textContent = "Привіт з JavaScript!"; 
+
+Щойно браузер виконає цей рядок коду, старий текст «Вітаємо у світі DOM!» миттєво зникне, 
+а замість нього користувач побачить «Привіт з JavaScript!».
+
+🔹 Зміна тексту в колекціях (querySelectorAll):
+Якщо ти знайшов кілька елементів через querySelectorAll, ти не можеш змінити текст усім одразу ось так: allButtons.textContent = "Текст". 
+Це викличе помилку, бо allButtons — це колекція (масив).
+Щоб змінити текст кожній кнопці, масив потрібно перебрати через вже знайомий тобі метод .forEach():
+
+const allButtons = document.querySelectorAll('.action-btn');
+allButtons.forEach((btn, index) => {
+    btn.textContent = `Кнопка №${index + 1}`;
+});
+
+🖌 Властивість .style
+Кожен DOM-елемент має об'єкт .style. Записуючи туди значення, ми ніби додаємо інлайнові стилі безпосередньо в HTML-тег 
+(наприклад, <p style="color: red;">).
+
+🔹 Важливе правило написання назв властивостей (CamelCase):
+У CSS ми пишемо властивості через дефіс: background-color, font-size.
+Але в JavaScript дефіс означає мінус! Тому всі назви властивостей в JS пишуться за правилом camelCase 
+(без дефісів, а кожне наступне слово з великої літери):
+
+background-color ➡️ backgroundColor
+font-size ➡️ fontSize
+text-align ➡️ textAlign
+
+🔹 Приклад роботи зі стилями:
+const mainTitle = document.querySelector('#main-title');
+
+if (mainTitle) {
+    mainTitle.style.color = 'red';               // Змінюємо колір тексту
+    mainTitle.style.backgroundColor = 'yellow';  // Змінюємо колір фону
+    mainTitle.style.fontSize = '40px';           // Змінюємо розмір (обов'язково вказувати одиниці виміру 'px' як рядок)
+}
+
+👁️ Як ховати та показувати елементи на сторінці?
+У CSS є чудова властивість display. Якщо ми дамо їй значення 'none', елемент повністю зникне зі сторінки, 
+ніби його там ніколи й не було. А якщо ми хочемо його повернути, ми повертаємо йому стандартне значення 
+(наприклад, '' — порожній рядок, що скидає приховування, або 'block').
+element.style.display = 'none'; // Елемент зникає з екрана 👻
+element.style.display = ''; // Елемент знову з'являється 🔑
+
+🧱 Робота з декількома елементами одночасно
+Коли ми пишемо код для реальних завдань, ми спочатку знаходимо всі потрібні нам «вузли» (елементи) сторінки, 
+перевіряємо їх за допомогою нашого правила if, а потім крок за кроком міняємо їм і текст, і стилі.
+Наприклад, якщо ми робимо "Нічний режим" для сайту, ми маємо знайти фон сторінки, знайти текст, 
+знайти кнопки і кожному з них прописати нові кольори.
+
+📝 Завдання №29.1 (Створення структури та перший пошук):
+Цього разу ми створюємо справжні файли в твоїй папці проекту (firstProject).
+Крок 1. Створи HTML-файл.
+Крок 2. Напиши код у своєму файлі app.js:
+Очисти свій app.js від попередніх тем і напиши код для пошуку елементів з нашого нового HTML-файлу:
+Створи змінну pageTitle і за допомогою document.querySelector знайди заголовок за його ID (main-title).
+Створи змінну firstParagraph і за допомогою document.querySelector знайди перший абзац за його класом (text-info).
+Створи змінну allButtons і за допомогою document.querySelectorAll знайди всі кнопки за їхнім класом (action-btn).
+Виведи всі три змінні в консоль за допомогою console.log().
+Відкрий файл index.html у браузері.
+Натисни F12 та перейди у вкладку Console.
+Зроби скриншот усього екрана браузера (щоб було видно і саму сторінку з кнопками, і вкладку консолі з результатами пошуку елементів, 
+які вивів твій console.log).
+
+✅ Рішення:
+const pageTitle = document.querySelector('#main-title');
+const firstParagraph = document.querySelector('.text-info');
+const allButtons = document.querySelectorAll('.action-btn');
+
+console.log(pageTitle);
+console.log(firstParagraph);
+console.log(allButtons);
+
+📝 Завдання №29.2 (Оновлення інтерфейсу сторінки):
+Давай відредагуємо текст на нашій сторінці за допомогою JavaScript. 
+Твій HTML-файл index.html залишається без змін (там усе ті ж заголовок, два абзаци та дві кнопки).
+Перейди у файл app.js, очисти його і напиши наступну логіку:
+Знайди заголовок за його ID (#main-title) і зміни його текст на: "Керування сторінкою активовано!".
+Знайди перший абзац за його класом (.text-info) і зміни його текст на: "Цей текст було автоматично змінено за допомогою JS.".
+За допомогою document.querySelectorAll знайди обидві кнопки за їхнім класом (.action-btn). 
+Використай метод .forEach(), щоб змінити текст кожної кнопки на слово "Готово".
+Збережи файл app.js, онови сторінку index.html у браузері та переконайся, що весь текст на екрані змінився.
+
+✅ Рішення:
+const mainTitle = document.querySelector('#main-title');
+if(mainTitle){ // додаємо if, аби ми точно були впевнені, що такий параграф існує і VS Code не сварився
+    mainTitle.textContent = "Керування сторінкою активовано!";
+}
+
+const firstParagraph = document.querySelector('.text-info');
+if(firstParagraph){
+    firstParagraph.textContent = "Цей текст було автоматично змінено за допомогою JS.";
+}
+
+const buttons = document.querySelectorAll('.action-btn');
+buttons.forEach((btn) => {
+    btn.textContent = "Готово";
+});
+
+📝 Завдання №29.3 (Стилізація сторінки):
+Давай розфарбуємо нашу сторінку. Твій HTML-файл залишається без змін. Перейди у файл app.js, 
+повністю очисти його від попереднього коду і напиши нову логіку:
+Знайди заголовок за його ID (#main-title). Якщо він існує, зміни йому колір тексту (.style.color) на будь-який інший 
+(наприклад, 'darkblue' або 'green').
+Знайди перший абзац за класом (.text-info). Якщо він існує, зміни йому розмір шрифту (.style.fontSize) на '24px', 
+а також зроби його жирним за допомогою властивості fontWeight, присвоївши їй значення 'bold'.
+Знайди всі кнопки за класом (.action-btn). За допомогою .forEach() зміни кожній кнопці колір фону (.style.backgroundColor) на 'orange', 
+а колір тексту всередині кнопок (.style.color) на 'white'.
+Збережи файл, онови сторінку в браузері та переконайся, що елементи змінили свій вигляд.
+
+✅ Рішення:
+⚠️З використанням // @ts-check на початку файлу⚠️
+/** @type {HTMLElement | null} */
+const mainTitle = document.querySelector('#main-title');
+if(mainTitle){
+    mainTitle.style.color = 'darkblue';
+}
+
+/** @type {HTMLElement | null} */
+const firstParagraph = document.querySelector('.text-info');
+if(firstParagraph){
+    firstParagraph.style.fontSize = '24px';
+    firstParagraph.style.fontWeight = 'bold';
+}
+
+const buttons = document.querySelectorAll('.action-btn');
+buttons.forEach((btn) => {
+    /** @type {HTMLElement} */
+    const htmlBtn = /** @type {any} */(btn); 
+    
+    htmlBtn.style.backgroundColor = 'orange';
+    htmlBtn.style.color = 'white';
+})
+
+⚠️Без використанням // @ts-check на початку файлу⚠️
+/** @type {HTMLElement} */ // універсальний коментар для querySelector, щоб програма підказувала нам слова
+const mainTitle = document.querySelector('#main-title');
+if(mainTitle){
+    mainTitle.style.color = 'darkblue';
+}
+
+/** @type {HTMLElement} */
+const firstParagraph = document.querySelector('.text-info');
+if(firstParagraph){
+    firstParagraph.style.fontSize = '24px';
+    firstParagraph.style.fontWeight = 'bold';
+}
+
+/** @type {NodeListOf<HTMLElement>} */ // універсальний коментар для querySelectorAll, щоб програма підказувала нам слова
+const buttons = document.querySelectorAll('.action-btn');
+buttons.forEach((btn) => {  
+    btn.style.backgroundColor = 'orange';
+    btn.style.color = 'white';
+})
+
+📝 Завдання №29.4 (Супер-дизайнер сайту):
+Для цього завдання наш HTML-файл index.html залишається абсолютно таким самим, як у твоєму довіднику 
+(заголовок #main-title, два абзаци .text-info та дві кнопки .action-btn).
+Тобі потрібно повністю очистити файл app.js і написати код, який наведе лад на сторінці за такими кроками:
+Працюємо із заголовком:
+Знайди заголовок за його ID #main-title.
+Зміни його текст на: "Ласкаво просимо до нашої першої програми!".
+Зміни колір тексту на фіолетовий ('purple'), а розмір шрифту зроби '45px'.
+Працюємо з абзацами:
+Знайди перший абзац за допомогою querySelector за його класом .text-info 
+(не забудь додати універсальний коментар, щоб VS Code допомагав із підказками).
+Повністю сховай цей перший абзац з екрана за допомогою властивості display (присвой їй значення 'none'). Користувач не повинен його бачити.
+Працюємо з кнопками:
+Знайди всі кнопки за їхнім класом .action-btn (використовуй коментар / @type {NodeListOf<HTMLElement>} */).
+За допомогою методу .forEach(), використовуючи також параметр index (як у твоєму прикладі в довіднику), зміни текст кожної кнопки:
+Перша кнопка має отримати текст: "Запустити гру"
+Друга кнопка має отримати текст: "Вихід з гри"
+Додатково всередині .forEach() зміни колір фону для кожної кнопки на зелений ('green'), а колір тексту всередині них на жовтий ('yellow').
+
+✅ Рішення:
+/**@type {HTMLElement} */
+const mainTitle = document.querySelector('#main-title');
+if(mainTitle){
+    mainTitle.textContent = "Ласкаво просимо до нашої першої програми!";
+    mainTitle.style.color = 'purple';
+    mainTitle.style.fontSize = '45px';
+}
+
+/**@type {HTMLElement} */
+const firstParagraph = document.querySelector('.text-info');
+if(firstParagraph){
+    firstParagraph.style.display = 'none';
+}
+
+/** @type {NodeListOf<HTMLElement>} */
+const buttons = document.querySelectorAll('.action-btn');
+buttons.forEach((btn, index) => {
+    btn.style.backgroundColor = 'green';
+    btn.style.color = 'yellow';
+    if (index === 0) {
+        btn.textContent = "Запустити гру";
+    } else {
+        btn.textContent = "Вихід з гри";
+    }
+})
