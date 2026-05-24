@@ -1,0 +1,106 @@
+Тема №34: Методи класу (Class Methods) ⚙️
+Методи класу — це функції, які визначаються всередині класу і описують дії, які можуть виконувати об'єкти цього класу.
+
+🚀 Чому це важливо?
+Замість того, щоб писати окремі функції для обробки даних, ми "прикріплюємо" ці дії прямо до об'єкта. 
+Це робить код організованішим і зрозумілішим.
+
+📦 Синтаксис:
+class Car {
+  constructor(brand, model) {
+    this.brand = brand;
+    this.model = model;
+  }
+
+  // Це і є метод класу
+  displayInfo() {
+    console.log(`Це авто марки ${this.brand}, модель ${this.model}.`);
+  }
+}
+
+const myCar = new Car('Toyota', 'Corolla');
+myCar.displayInfo(); // Виклик методу
+🔑 Ключовий момент: Всередині методів ми використовуємо this, щоб отримати доступ до властивостей саме того об'єкта, на якому викликали метод.
+
+📝 Завдання №34.1 (Метод "опис"):
+Використай свій клас Car, який ти вже створив. Додай всередині нього (після конструктора) метод drive(), який виводить у консоль рядок: 
+"Автомобіль [марка] [модель] почав рух".
+Після цього виклич цей метод для своєї lamborghini.
+
+✅ Рішення:
+class Car {
+    constructor(brand, model, year){
+        this.brand = brand;
+        this.model = model;
+        this.year = year;
+    }
+    drive(){
+        console.log(`Автомобіль ${this.brand} ${this.model} почав рух`);
+    }
+}
+
+const volkswahen = new Car('Volkswagen', 'Golf', 2013);
+const lamborghini = new Car ('Lamborgini', 'Miura', 1968);
+volkswahen.drive();
+lamborghini.drive();
+
+📝 Завдання №34.2 (Банківський рахунок):
+Створи клас BankAccount, який допоможе керувати балансом рахунку.
+Конструктор: Має приймати owner (власник) та balance (початковий баланс).
+Метод deposit(amount): Має додавати вказану суму (amount) до this.balance і виводити в консоль повідомлення про успішне поповнення.
+Метод withdraw(amount):
+Має перевіряти: чи вистачає коштів на рахунку (this.balance >= amount).
+Якщо вистачає — віднімати суму та виводити повідомлення.
+Якщо ні — виводити повідомлення про недостатню кількість коштів.
+
+✅ Рішення:
+class BankAccount {
+    constructor(owner, balance){
+        this.owner = owner;
+        this.balance = balance;
+    }
+    deposit(money){
+        const amount = money + this.balance;
+        console.log(`Ваш рахунок поповнено на ${money} грн. Тепер на вашому рахунку ${amount} грн`);
+        return amount;
+    }
+    withdraw(money){
+        if(this.balance >= money){
+            const amount = this.balance - money;
+            console.log(`Ви зняли ${money} грн. Тепер на вашому рахунку ${amount} грн`);
+            return amount;
+        } else { 
+            console.log(`Помилка. Недостатньо грошей на рахунку`);
+        }
+    }
+}
+
+const myAccount = new BankAccount('Ivan', 12000);
+myAccount.deposit(500);
+myAccount.withdraw(10000);
+myAccount.withdraw(15000);
+
+📝 Завдання №34.3 (Task Manager):
+Створи клас Task.
+Конструктор: має приймати title (назва завдання) та isCompleted (статус виконання, за замовчуванням має бути false).
+Метод toggleStatus(): цей метод має змінювати значення this.isCompleted на протилежне (якщо було false — стане true, і навпаки).
+Метод displayTask(): має виводити в консоль рядок у форматі: "Завдання: [назва], статус: [виконано/не виконано]".
+
+✅ Рішення:
+class Task {
+    constructor(title, isCompleted) {
+        this.title = title;
+        this.isCompleted = isCompleted;        
+    }
+    toggleStatus(){
+        this.isCompleted = !this.isCompleted;
+    }
+    displayTask(){
+        console.log(`Завдання: ${this.title}, статус: ${this.isCompleted}`);
+    }
+}
+
+const myTask = new Task('Learn JS', true);
+myTask.displayTask();
+myTask.toggleStatus();
+myTask.displayTask();
