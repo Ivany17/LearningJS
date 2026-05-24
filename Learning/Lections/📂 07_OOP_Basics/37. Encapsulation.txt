@@ -1,0 +1,175 @@
+Тема №37: Інкапсуляція (Encapsulation) 🛡️
+Інкапсуляція — це принцип ООП, який дозволяє "приховати" внутрішній стан об'єкта від прямого доступу ззовні. 
+Ми обмежуємо доступ до певних властивостей та методів, щоб користувач класу не міг випадково або навмисно зламати внутрішню логіку роботи об'єкта.
+
+💡 Ключові моменти:
+🔒 Приватні поля (Private Fields): У JavaScript, щоб зробити властивість приватною, ми додаємо символ # перед її назвою. 
+До такої властивості можна звернутися тільки всередині класу, де вона була оголошена.
+
+🛑 Захист даних: Якщо властивість приватна, спроба доступу до неї ззовні (через obj.#property) викличе помилку. 
+Це гарантує, що дані не зміняться непередбачуваним чином.
+
+🚪 Публічний інтерфейс: Ми залишаємо публічні методи, які дозволяють безпечно взаємодіяти з прихованими даними. 
+Це свого роду "пульт керування" пристроєм, де ми натискаємо кнопки, але не ліземо всередину дротів.
+
+📝 Завдання №37.1 (Створення "захищеного" банківського рахунку):
+Створи клас BankAccount.
+У конструкторі додай публічну властивість owner (власник) та приватну властивість #balance (баланс, наприклад, 0).
+Додай метод deposit(amount), який приймає суму і додає її до #balance.
+Додай метод getBalance(), який повертає (або виводить) значення #balance.
+Створи екземпляр myAccount (наприклад, 'Іван').
+Спробуй додати гроші через deposit() і перевірити баланс через getBalance().
+Важливо: Спробуй прямо змінити баланс, написавши myAccount.#balance = 1000000; — подивись, що скаже консоль (має бути помилка синтаксису).
+
+✅ Рішення:
+class BankAccount {
+  #balance = 0; // Оголошення приватного поля (захист даних) 🔒
+    constructor(owner, initialBalance) {
+        this.owner = owner;      // Публічна властивість 🔓
+        this.#balance = initialBalance; // Присвоєння значення приватному полю
+    }
+    deposit(amount){
+        return this.#balance = amount + this.#balance;
+    }
+    getBalance(){
+        console.log(this.#balance);
+    }
+}
+
+const myAccount = new BankAccount('Іван', 100);
+myAccount.deposit(200);
+myAccount.getBalance();
+//console.log(myAccount.#balance); // видає помилку
+
+📝 Завдання №37.2 (Безпечне керування доступом):
+Уяви клас User, який зберігає особисті дані.
+Створи клас User, який має:
+Публічну властивість username.
+Приватну властивість #password.
+У конструкторі ініціалізуй ці властивості.
+Додай метод checkPassword(inputPassword), який повертає true, якщо введений пароль збігається з #password, і false — якщо ні.
+Створи екземпляр класу myUser з якимось паролем.
+Спробуй перевірити правильність пароля через метод checkPassword().
+Спробуй напряму змінити пароль ззовні (myUser.#password = 'newPass') — очікувано, це має викликати помилку.
+
+✅ Рішення:
+class User {
+    #password = '';
+    constructor(username, userPassword){
+        this.username = username;
+        this.#password = userPassword;
+    }
+    checkPassword(inputPassword){
+        if(inputPassword === this.#password){
+            console.log("Доступ дозволено");
+        } else {
+            console.log("Доступ заборонено");
+        }
+    }
+}
+
+const firstUser = new User('Valeria', 'Admin123');
+const secondUser = new User('Ivan', 'Admin123');
+firstUser.checkPassword('Admin321');
+secondUser.checkPassword('Admin123');
+
+📝 Завдання №37.3 (Перевірка приватності):
+Уяви, що ми хочемо створити "захищений" логгер, який рахує, скільки разів його викликали.
+Створи клас ActionCounter.
+Додай приватну властивість #count, ініціалізуй її значенням 0.
+Додай метод increment(), який збільшує #count на 1.
+Додай метод getCount(), який повертає поточне значення #count.
+Спробуй створити об'єкт, викликати increment() декілька разів, а потім отримати результат через getCount().
+
+✅ Рішення:
+class ActionCounter{
+    #count = 0;
+    increment(){
+        this.#count++;
+    }
+    getCount(){
+        console.log(this.#count);
+    }
+}
+
+const counter = new ActionCounter();
+counter.increment();
+counter.increment();
+counter.increment();
+counter.increment();
+counter.increment();
+counter.getCount();
+
+📝 Завдання №37.4 (Керування температурним режимом):
+Уяви клас Thermostat (термостат), який керує температурою. 
+Ми хочемо, щоб користувач міг змінювати температуру лише в певних межах (наприклад, від 16 до 30 градусів), 
+і не міг встановити, скажімо, 500 градусів.
+Створи клас Thermostat.
+Додай приватну властивість #temperature зі значенням за замовчуванням 20.
+Додай метод setTemperature(newTemp):
+Якщо newTemp знаходиться в межах від 16 до 30, онови #temperature.
+Якщо newTemp виходить за ці межі, виведи в консоль повідомлення про помилку: "Температура має бути в межах від 16 до 30 градусів", і нічого не змінюй.
+Додай метод getTemperature(), який повертає поточну температуру.
+Спробуй встановити коректну температуру (наприклад, 25) і некоректну (наприклад, 40). Перевір результат через getTemperature().
+
+✅ Рішення:
+class Thermostat {
+    #temperature = 20;
+    setTemperature(newTemp){
+        if(newTemp >= 16 && newTemp <= 30){
+            this.#temperature = newTemp;
+        } else {
+            console.log( "Температура має бути в межах від 16 до 30 градусів");
+        }
+    }
+    getTemperature(){
+        console.log(`Поточна температура - ${this.#temperature} градусів`);
+    }
+}
+
+const thermostat = new Thermostat();
+
+thermostat.setTemperature(25);
+thermostat.setTemperature(40);
+thermostat.getTemperature();
+
+📝 Завдання №37.5 (Гаманець з лімітом):
+Створи клас Wallet.
+Додай приватну властивість #balance, ініціалізуй її 0.
+Додай публічний метод addMoney(amount):
+Дозволяй додавати гроші лише якщо amount більше 0.
+Якщо сума додана успішно, виведи в консоль повідомлення про успіх.
+Додай публічний метод spendMoney(amount):
+Дозволяй витрачати гроші лише якщо amount не перевищує поточний #balance.
+Якщо грошей достатньо — віднімай суму від #balance і виводь оновлений баланс.
+Якщо грошей недостатньо — виведи повідомлення: "Недостатньо коштів!".
+Додай метод getDetails(), який виводить власника та поточний баланс (ти можеш додати owner як публічну властивість у конструкторі).
+
+✅ Рішення:
+class Wallet { 
+    #balance = 0;
+    addMoney(amount){
+        if(amount > 0){
+            this.#balance = this.#balance + amount;
+            console.log(`Ваш баланс поповнено на ${amount} грн.`);
+        }
+    }
+    spendMoney(amount){
+        if(amount <= this.#balance){
+            this.#balance = this.#balance - amount;
+            console.log(`Ви зняли ${amount} грн.`);
+        } else {
+            console.log(`Недостатньо коштів!`);
+        }
+    }
+    getDetails(){
+        console.log(`На вашому рахунку ${this.#balance} грн`);
+    }
+}
+
+const myWallet = new Wallet();
+myWallet.addMoney(300);
+myWallet.addMoney(400);
+myWallet.spendMoney(500);
+myWallet.getDetails();
+myWallet.spendMoney(600);
