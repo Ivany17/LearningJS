@@ -1,0 +1,150 @@
+Тема №36: Перевизначення методів (Method Overriding) 🔄
+Перевизначення методів — це здатність дочірнього класу надавати власну, специфічну реалізацію методу, який вже визначений у батьківському класі.
+
+💡 Ключові моменти:
+Навіщо це потрібно: Батьківський клас визначає "загальну" поведінку, а дочірній клас може "уточнити" або повністю змінити її, 
+щоб вона краще відповідала його функціоналу.
+
+Як це працює: Коли ми викликаємо метод у об'єкта, JavaScript шукає його спочатку у самому класі об'єкта. Якщо знаходить — виконує його. 
+Якщо ні — йде шукати вище по ієрархії успадкування (до батьківського класу).
+
+Механізм: Ми просто створюємо метод з такою ж назвою у дочірньому класі. Він "затінює" (shadows) однойменний метод батька.
+
+📝 Приклад:
+class Parent {
+  showInfo() {
+    console.log("Це батьківський метод");
+  }
+}
+
+class Child extends Parent {
+  // Перевизначаємо метод
+  showInfo() {
+    console.log("Це перевизначений метод у дочірньому класі");
+  }
+}
+
+📝 Завдання №36.1 (Перші кроки з Override):
+Створи клас Device (пристрій), який має властивість brand та метод getPowerInfo(), що виводить: "Бренд: [brand], живлення: стандартне".
+Створи клас Laptop, який успадковує Device.
+У класі Laptop перевизнач метод getPowerInfo(), щоб він виводив: "Бренд: [brand], живлення: акумулятор".
+Створи об'єкт myLaptop (наприклад, 'Dell') та виклич getPowerInfo().
+
+✅ Рішення:
+class Device{
+    constructor(brand){
+        this.brand = brand;
+    }
+    getPowerInfo(){
+        console.log(`Бренд: ${this.brand}, живлення: стандартне`);
+    }
+}
+
+class Laptop extends Device{
+    constructor(brand){
+        super(brand);
+    }
+    getPowerInfo(){
+        console.log(`Бренд: ${this.brand}, живлення: акумулятор`);
+    }
+}
+
+const myLaptop = new Laptop('ASUS');
+myLaptop.getPowerInfo();
+
+📝 Завдання №36.2 (Виклик батьківського методу):
+Уяви, що в класі Device метод getPowerInfo() виводить загальну інформацію.
+В класі Laptop нам потрібно, щоб при виклику getPowerInfo() спочатку вивелася загальна інформація, 
+а потім додатковий рядок: "Тип пристрою: мобільний".
+Реалізуй це перевизначення методу в класі Laptop, використовуючи super.getPowerInfo().
+
+✅ Рішення:
+class Device{
+    constructor(brand){
+        this.brand = brand;
+    }
+    getPowerInfo(){
+        console.log(`Бренд: ${this.brand}, живлення: стандартне`);
+    }
+}
+
+class Laptop extends Device{
+    constructor(brand){
+        super(brand);
+    }
+    getPowerInfo(){
+        super.getPowerInfo();
+        console.log(`Тип пристрою: мобільний`);
+    }
+}
+
+const myLaptop = new Laptop('ASUS');
+myLaptop.getPowerInfo();
+
+📝 Завдання №36.3 (Магазин електроніки):
+Створи базовий клас Product (товар), який має властивості name (назва) та price (ціна). 
+Додай метод getDetails(), який виводить рядок: "Товар: [name], ціна: [price] грн".
+Створи дочірній клас DiscountedProduct (товар зі знижкою), який успадковує Product.
+У конструкторі DiscountedProduct додай нову властивість discount (знижка у відсотках).
+Перевизнач метод getDetails() у класі DiscountedProduct:
+Він має викликати батьківський метод getDetails(), щоб вивести базову назву та ціну.
+Після цього він повинен вивести окремим рядком інформацію про знижку: "Знижка: [discount]%" 
+(або ж можеш спробувати об'єднати це в один вивід, як тобі зручніше).
+Створи екземпляр myProduct (наприклад, 'Смартфон', 10000, знижка 10) і виклич метод getDetails().
+
+✅ Рішення:
+class Product {
+    constructor(name, price) {
+        this.name = name;
+        this.price = price;
+    }
+    getDetails(){
+        console.log(`Товар: ${this.name}, ціна: ${this.price} грн`);
+    }
+}
+
+class DiscountedProduct extends Product {
+    constructor(name, price, discount) {
+        super(name, price);
+        this.discount = discount;
+    }
+    getDetails(){
+        super.getDetails();
+        console.log(`Знижка: ${this.discount}%`);
+    }
+}
+
+const myProduct = new DiscountedProduct('Ноутбук', 12000, 10);
+myProduct.getDetails();
+
+📝 Завдання №36.4 (Об'єднання рядків):
+У класі Product змініть метод getDetails(): нехай він замість console.log() 
+використовує return для повернення рядка: `Товар: ${this.name}, ціна: ${this.price} грн`.
+Тепер у класі DiscountedProduct перевизнач getDetails() так:
+Збережи результат super.getDetails() у змінну (наприклад, baseInfo).
+Виведи в консоль рядок, який поєднує baseInfo та інформацію про знижку, використовуючи шаблонний рядок.
+
+✅ Рішення:
+class Product {
+    constructor(name, price) {
+        this.name = name;
+        this.price = price;
+    }
+    getDetails(){
+        return `Товар: ${this.name}, ціна: ${this.price} грн.`;
+    }
+}
+
+class DiscountedProduct extends Product {
+    constructor(name, price, discount) {
+        super(name, price);
+        this.discount = discount;
+    }
+    getDetails(){
+        const baseInfo = super.getDetails();
+        console.log(baseInfo + ` Знижка: ${this.discount}%`);
+    }
+}
+
+const myProduct = new DiscountedProduct('Ноутбук', 12000, 10);
+myProduct.getDetails();
