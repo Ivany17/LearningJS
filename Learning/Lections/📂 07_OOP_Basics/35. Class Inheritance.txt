@@ -1,0 +1,133 @@
+Тема №35: Спадкування класів (Class Inheritance) 🧬
+Спадкування в ООП — це механізм, який дозволяє одному класу (дочірньому) переймати властивості та методи іншого класу (батьківського). 
+Це дозволяє нам будувати ієрархії, де ми описуємо загальні характеристики в одному місці, а специфічні — у конкретних класах.
+
+🚀 Ключові поняття:
+🔵 Ключове слово extends: Вказує на те, що клас успадковує функціональність іншого класу.
+⚙️ Ключове слово super(): Викликає конструктор батьківського класу. 
+Це обов'язкова дія в конструкторі дочірнього класу, щоб правильно ініціалізувати "батьківські" властивості перед тим, 
+як ми почнемо використовувати this для власних властивостей.
+
+📦 Переваги:
+Уникнення дублювання коду (DRY — Don't Repeat Yourself).
+Логічна організація коду: загальна логіка вгорі, специфічна — нижче в ієрархії.
+
+📝 Приклад структури:
+class Parent {
+  constructor(name) {
+    this.name = name;
+  }
+  sayHello() {
+    console.log(`Привіт, я ${this.name}`);
+  }
+}
+
+class Child extends Parent {
+  constructor(name, age) {
+    super(name); // Передаємо ім'я у батьківський конструктор
+    this.age = age;
+  }
+}
+
+📝 Завдання №35.1 (Зоопарк):
+Створи батьківський клас Animal. У його конструкторі мають бути властивості name (ім'я) та age (вік). 
+Також додай метод eat(), який виводить у консоль рядок: "[ім'я] їсть".
+Створи дочірній клас Dog, який успадковує Animal через extends.
+У конструкторі Dog використай super(), щоб ініціалізувати ім'я та вік, а також додай нову властивість breed (порода).
+У класі Dog створи додатковий метод bark(), який виводить у консоль: "Гав-гав! Я [ім'я] породи [порода]".
+Створи екземпляр myDog (наприклад, 'Рекс', 3 роки, порода 'Вівчарка').
+Виклич для myDog обидва методи: eat() (отриманий у спадок) та bark() (власний).
+
+✅ Рішення:
+class Animal {
+    constructor(name, age) {
+        this.name = name;
+        this.age = age;
+    }
+    eat(){
+        console.log(`${this.name} їсть`);
+    }
+}
+
+class Dog extends Animal {
+    constructor(name, age, breed){
+        super(name, age);
+        this.breed = breed;
+    }
+    bark(){
+        console.log(`Гав-гав! Я ${this.name} породи ${this.breed}`);
+    }
+}
+
+const myDog = new Dog('Рекс', 3, 'Вівчарка');
+myDog.eat();
+myDog.bark();
+
+📝 Завдання №35.2 (Управління персоналом):
+Створи базовий клас Employee (працівник). У нього мають бути властивості name (ім'я) та position (посада). 
+Також додай метод getDetails(), який виводить рядок: "Працівник: [ім'я], Посада: [посада]".
+Створи дочірній клас Manager, який наслідує Employee.
+У конструкторі Manager додай нову властивість department (відділ) і використай super() для ініціалізації імені та посади.
+Створи екземпляр myManager (наприклад, 'Олена', 'Керівник проектів', відділ 'IT').
+Виклич для myManager метод getDetails() (отриманий у спадок).
+
+✅ Рішення:
+class Employee {
+    constructor(name, position){
+        this.name = name;
+        this.position = position;
+    }
+    getDetails(){
+        console.log(`Працівник: ${this.name}, Посада: ${this.position}`);
+    }
+}
+
+class Manager extends Employee{
+    constructor(name, position, department) {
+        super(name, position);
+        this.department = department;
+    }
+}
+
+const myManager = new Manager('Іван', 'full-stack розробник', 'Маркетинг');
+myManager.getDetails();
+
+📝 Завдання №35.3 (Багаторівневе наслідування):
+У нас є ланцюжок: Employee (батько) -> Manager (дитина) -> Director (онук).
+Створи клас Director, який наслідує Manager.
+У конструкторі Director додай нову властивість bonus (річна премія). Не забудь, що super() має викликати конструктор Manager, 
+передаючи йому необхідні аргументи (name, position, department).
+Додай у Director метод getReport(), який виводить: "Директор: [name], відділ: [department], премія: [bonus]".
+Створи екземпляр myDirector (наприклад, 'Олег', 'CEO', 'Управління', 50000).
+Виклич для myDirector метод getDetails() (який він успадкував через Manager) та метод getReport().
+
+✅ Рішення:
+class Employee {
+    constructor(name, position){
+        this.name = name;
+        this.position = position;
+    }
+    getDetails(){
+        console.log(`Працівник: ${this.name}, Посада: ${this.position}`);
+    }
+}
+
+class Manager extends Employee{
+    constructor(name, position, department) {
+        super(name, position);
+        this.department = department;
+    }
+}
+
+class Director extends Manager {
+    constructor(name, position, department, bonus) {
+        super(name,position, department);
+        this.bonus = bonus;
+    }
+    getReport(){
+        console.log(`Директор: ${this.name}, відділ: ${this.department}, премія: ${this.bonus}`);
+    }
+}
+
+const myDirector = new Director('Валерія', 'СЕО', 'Управління', 15000);
+myDirector.getReport();
