@@ -1,0 +1,247 @@
+Тема №31: Об'єкт події (Event Object) 📦
+Браузер завжди передає цей об'єкт найпершим аргументом у нашу функцію. Зазвичай розробники приймають його у змінну з назвою e або event:
+button.addEventListener('click', function(e) {
+    console.log(e); // Виведе величезний об'єкт із деталями події
+});
+
+У цьому об'єкті є безліч корисних властивостей:
+🎯 e.target — це посилання на конкретний елемент, на якому відбулася подія (дуже схоже на this, але працює навіть у стрілкових функціях).
+📄 e.target.value — динамічний вміст (текст), який знаходиться всередині елемента input або textarea в момент введення.
+⌨️ e.key — якщо це подія клавіатури ('keydown'), тут зберігається назва натиснутої клавіші (наприклад, 'Enter', 'Escape', або літери).
+Це відкриває можливість робити динамічний інтерфейс, який реагує на введення користувача.
+
+⌨️ Робота з клавіатурою через e.key
+Коли ми працюємо з подіями клавіатури, наприклад 'keydown' (натискання клавіші), об'єкт події автоматично містить властивість e.key. 
+Вона зберігає текстову назву кнопки, яку щойно натиснув користувач.
+
+Наприклад:
+Якщо натиснути Enter, e.key буде дорівнювати "Enter".
+Якщо натиснути Escape, e.key буде дорівнювати "Escape".
+Якщо натиснути пробіл, e.key буде дорівнювати " ".
+Це дозволяє нам створювати гарячі клавіші або керувати інтерфейсом за допомогою клавіатури, як у справжніх десктопних програмах на C#.
+// Приклад відловлювання клавіші Enter
+input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+        console.log('Користувач натиснув Enter!');
+    }
+});
+
+Коли користувач натискає гарячі клавіші, нам часто потрібно знати, чи були в цей момент затиснуті спеціальні модифікатори, як-от Ctrl або Shift 
+(наприклад, для комбінацій на кшталт Ctrl + Enter для надсилання повідомлення, як у багатьох месенджерах).
+В об'єкті події e для цього є готові булеві властивості:
+🎛️ e.ctrlKey — повертає true, якщо під час події був затиснутий Ctrl.
+⬆️ e.shiftKey — повертає true, якщо був затиснутий Shift.
+
+🛑 Скасування стандартної поведінки (e.preventDefault())
+У браузері є HTML-елементи, які мають свою «вбудовану» поведінку за замовчуванням. Наприклад:
+Коли ти клікаєш на посилання <a href="...">, браузер автоматично перезавантажує сторінку і переходить за адресою.
+Коли ти натискаєш кнопку всередині форми <form>, браузер намагається відправити дані на сервер і знову ж таки перезавантажує сторінку.
+У сучасних JS-додатках (як і у C# Web API / Blazor) ми часто хочемо обробляти такі події самостійно через JavaScript, 
+без перезавантаження сторінки. Для цього в об'єкта події e є спеціальний метод — e.preventDefault().
+
+Приклад використання:
+const link = document.querySelector('a');
+
+link.addEventListener('click', function(e) {
+    e.preventDefault(); // Зупиняємо перехід за посиланням!
+    console.log("Посилання клікнули, але нікуди не переходимо.");
+});
+
+📝 Завдання №31.1 (Ехо-текст):
+Крок 1. Код для твого index.html:
+
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Перша подія</title>
+</head>
+<body>
+    <input type="text" id="user-input" placeholder="Пиши сюди...">
+    <p id="echo-text">Тут буде дублюватися текст</p>
+    <button id="trigger-btn">Натисни мене</button>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+Крок 2. У файлі app.js напиши код:
+Знайди текстове поле за його ID #user-input та параграф за ID #echo-text.
+Додай до текстового поля слухач подій з типом 'input' (спрацьовує на кожен новий введений символ).
+Обов'язково передай об'єкт події e у функцію: function(e) { ... }.
+Всередині функції змінюй текст параграфа (textContent), прирівнюючи його до значення з текстового поля. 
+Значення текстового поля лежить у властивості e.target.value.
+
+✅ Рішення:
+/** @type {HTMLElement} */
+const button = document.querySelector('#trigger-btn');
+if(button){
+    button.addEventListener('click', function(){
+        this.textContent = "Мене натиснуто!";
+        this.style.color = 'green';
+    });
+}
+
+/** @type {HTMLElement} */
+const input = document.querySelector('#user-input');
+
+/** @type {HTMLElement} */
+const echo = document.querySelector('#echo-text');
+if(input && echo){
+    input.addEventListener('input', function(e){
+        echo.textContent = e.target.value;
+    });
+}
+
+📝 Завдання №31.2 (Очищення по Enter):
+1.(Очищення по Enter) 
+    Давай модифікуємо твою форму, щоб вона реагувала на клавішу Enter.
+    Залиш пошук елементів input та echo з твоїми JSDoc-коментарями типів та перевіркою if(input && echo).
+    Додай до елемента input ще один слухач подій — цього разу з типом 'keydown'.
+    Всередині функції обов'язково прийми об'єкт події e: function(e) { ... }.
+    Напиши умову if: якщо натиснута клавіша — це 'Enter' (e.key === 'Enter'), то очисти текстове поле та обнули параграф.
+    Очистити поле: this.value = '';
+    Очистити параграф: echo.textContent = '';
+2. (Скасування дії за клавішею Escape)
+    До твого поточного коду в app.js, прямо всередину вже існуючого слухача події 'keydown' (там, де ти перевіряєш Enter), додай ще одну умову else if.
+    Перевір, чи натиснув користувач клавішу Escape. Для цього порівняй e.key із рядком 'Escape'.
+    Якщо умова виконується:
+    Зміни значення в інпуті на слово "Скасовано": this.value = 'Скасовано';
+    Синхронізуй параграф, щоб у ньому теж з'явилося це слово: echo.textContent = 'Скасовано';
+3. (Надсилання по Ctrl + Enter)
+    Додай нову умову else if у свій поточний код всередині слухача 'keydown'.
+    Перевір комбінацію клавіш: користувач одночасно затиснув Ctrl та натиснув Enter. Логічна умова виглядатиме так: if (e.ctrlKey && e.key === 'Enter').
+    Якщо ця комбінація спрацювала, виведи в параграф echo текст: "Повідомлення надіслано!".
+4. (Захист від копіювання через Ctrl + C)
+    Додай до свого поточного ланцюжка if / else if всередині події 'keydown' ще одну, четверту гілку:
+    Додай умову (else if): Користувач натиснув комбінацію Ctrl + c. Умова: else if (e.ctrlKey && e.key === 'c').
+    Дія: Виведи в параграф echo текст: "Копіювання заборонено!"
+    Аби зробити код надійним і застрахуватися від будь-якого регістру, 
+    найкраще перевести символ у нижній регістр за допомогою вбудованого методу .toLowerCase() прямо в умові.
+5. (Реальне блокування копіювання):
+    Давай зробимо так, щоб текст більше не копіювався.
+    Усередині твого останнього блоку else if (e.ctrlKey && e.key.toLowerCase() === 'c') 
+    прямо перед або після зміни тексту параграфа додай один рядок:
+    e.preventDefault();
+6. (Створення функції для уникнення повторів)
+    Чи бачиш ти, що рядки echo.style.color і echo.textContent повторюються? Аби цього уникнути, треба один раз задати функцію
+    function BlackText(text), куди ти впишеш ці повторювальні рядки, як дефолтне значення один раз.
+
+✅ Рішення:
+/** @type {HTMLElement} */
+const input = document.querySelector('#user-input');
+
+/** @type {HTMLElement} */
+const echo = document.querySelector('#echo-text');
+if(input && echo){
+    input.addEventListener('input', function(e){
+        echo.textContent = e.target.value;
+    });
+}
+
+/** @type {HTMLElement} */
+const echo = document.querySelector('#echo-text');
+
+function BlackText(text){ // 6. (Створення функції для уникнення повторів рядків echo.style.color і echo.textContent)
+    echo.textContent = text;
+    echo.style.color = 'black';
+}
+
+if(input && echo){
+    input.addEventListener('input', function(e){
+        BlackText(e.target.value);
+        // echo.style.color = 'black';
+        // echo.textContent = e.target.value;
+    });
+}
+
+if(input){
+    input.addEventListener('keydown', function(e){
+        if(e.ctrlKey && e.key === 'Enter'){ // 3. (Надсилання по Ctrl + Enter)
+            BlackText('Повідомлення надіслано!');
+            // echo.style.color = 'black'; // додаємо black аби він нівелював red на рядку 45
+            // echo.textContent = 'Повідомлення надіслано!';
+        } else if(e.key === 'Enter'){ // 1. (Очищення по Enter)
+            BlackText('');
+            // echo.style.color = 'black';
+            this.value = '';
+            // echo.textContent = '';
+        } else if(e.key === 'Escape'){ // 2. (Скасування дії за клавішею Escape)
+            BlackText('Скасовано');
+            // echo.style.color = 'black';
+            this.value = 'Скасовано';
+            // echo.textContent = 'Скасовано';
+        } else if (e.ctrlKey && e.key.toLowerCase() === 'c'){ // 4. (Захист від копіювання через Ctrl + C)
+            e.preventDefault(); // 5. (Реальне блокування копіювання) 
+            echo.textContent = 'Копіювання заборонено!';
+            echo.style.color = 'red'; // додаємо red, як колір заборони
+        }
+    });
+}
+
+📝 Завдання №31.3. Крок 1 (Створення віджета та відловлювання клавіш)
+Спочтаку повністю заміни код у своєму index.html на цей новий варіант:
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Панель керування</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; }
+        #status-box {
+            width: 300px;
+            padding: 20px;
+            border: 2px dashed #ccc;
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="status-box">Режим: Очікування</div>
+    <input type="text" id="control-input" placeholder="Керуй кнопками тут...">
+
+    <script src="app.js"></script>
+</body>
+</html>
+
+Крок 1. Повністю очисти файл app.js і напиши код за такими підказками:
+    За допомогою document.querySelector знайди інпут за ID #control-input та блок віджета за ID #status-box 
+    (обов'язково додай коментарі типів / @type {HTMLElement} */ та перевірку if).
+    Додай до елемента input слухач подій з типом 'keydown', використовуючи класичну функцію та об'єкт події e.
+    Всередині напиши умову if: якщо користувач натиснув клавішу зі стрілкою вгору (e.key === 'ArrowUp'), то:
+    Зміни текст у status-box на "Швидкість збільшено!".
+    Зміни колір тексту у status-box на зелений ('green').
+Крок 2. (Розширення пульта керування)
+    Твоя задача — додати нові гілки умов всередину вже існуючого слухача 'keydown'. Допиши логіку через else if:
+    Зменшення швидкості: Якщо натиснуто клавішу зі стрілкою вниз ('ArrowDown'), то зміни текст у status на "Швидкість зменшено!", 
+    а колір тексту зроби помаранчевим ('orange').
+    Екстрене гальмування: Якщо натиснуто клавішу Backspace, то зміни текст на "СТОР_МАШИНА!", а колір тексту зроби червоним ('red').
+    Режим форсажу (Модифікатор): Якщо затиснуто комбінацію Shift та стрілку вгору ('ArrowUp'), то зміни текст на "РЕЖИМ ФОРСАЖУ!", 
+    а колір тексту — на синій ('blue').
+
+✅ Рішення:
+/** @type {HTMLElement} */
+const status = document.querySelector('#status-box');
+
+/** @type {HTMLElement} */
+const control = document.querySelector('#control-input');
+if(status && control){
+    control.addEventListener('keydown', function(e) {
+        if(e.shiftKey && e.key === 'ArrowUp'){
+            status.textContent = 'РЕЖИМ ФОРСАЖУ!';
+            status.style.color = 'blue';
+        } else if(e.key === 'ArrowUp'){
+            status.textContent = 'Швидкість збільшено!';
+            status.style.color = 'green';
+        } else if(e.key === 'ArrowDown'){
+            status.textContent = 'Швидкість зменшено!';
+            status.style.color = 'orange';
+        } else if(e.key === 'Backspace'){
+            status.textContent = 'СТОП МАШИНА!';
+            status.style.color = 'red';
+        }
+    })
+}
