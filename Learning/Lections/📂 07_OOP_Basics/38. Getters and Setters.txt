@@ -1,0 +1,208 @@
+Тема №38: Гетери та сетери (Getters and Setters) 🏗️
+В ООП JavaScript гетери та сетери — це спеціальні методи, які дозволяють керувати доступом до властивостей об'єкта, 
+зберігаючи при цьому вигляд звичайного звернення до поля (через крапку, без дужок ()). 
+Вони забезпечують інкапсуляцію, дозволяючи виконувати валідацію або обчислення "під капотом".
+
+✨ Гетер (Getter)
+Метод, що починається з ключового слова get. Він дозволяє "читати" значення властивості, як ніби це звичайне поле.
+Викликається автоматично при спробі зчитати властивість: console.log(obj.propertyName).
+Має завжди повертати значення (return).
+Це ідеальне місце для обчислюваних даних (наприклад, перетворення валюти або форматування рядка).
+
+🛡️ Сетер (Setter)
+Метод, що починається з ключового слова set. Він дозволяє "встановлювати" нове значення властивості.
+Викликається автоматично при спробі надати значення: obj.propertyName = value.
+Обов'язково приймає один аргумент (нове значення).
+Це найкраще місце для валідації даних. Ми можемо перевірити, чи відповідає нове значення вимогам (наприклад, чи не є баланс від'ємним), 
+і лише потім змінити приховане приватне поле.
+Сетери 🛡️ дозволяють не просто змінювати значення, а перевіряти його перед записом. 
+Це ключ до інкапсуляції, оскільки ми можемо відхилити некоректні дані, перш ніж вони зіпсують стан об'єкта.
+
+🗝️ Як це працює разом з інкапсуляцією?
+Ми зазвичай приховуємо реальну властивість за допомогою # (приватне поле). 
+Гетер та сетер стають єдиним публічним "інтерфейсом" для взаємодії з цими даними. 
+Це захищає об'єкт від встановлення "сміттєвих" даних ззовні.
+
+💡 Синтаксис:
+class Example {
+  #data = 0;
+  get value() {
+    return this.#data;
+  }
+  set value(newValue) {
+    if (newValue < 0) {
+      console.log("Помилка!");
+      return;
+    }
+    this.#data = newValue;
+  }
+}
+
+📝 Завдання №38.1 (Перший крок до геттерів):
+Створи клас Temperature, який зберігає приватну температуру #celsius.
+Додай гетер get fahrenheit(), який повертає значення в градусах Фаренгейта (формула: celsius * 9/5 + 32).
+Додай конструктор, який приймає та встановлює початкове значення #celsius.
+Створи об'єкт temp (наприклад, 20 градусів) і виведи в консоль temp.fahrenheit.
+
+✅ Рішення:
+class Temperature {
+    #celsius;
+    constructor(setCelsius){
+        this.#celsius = setCelsius;
+    }
+    get fahrenheit(){
+        const fahrenheit = this.#celsius * 9/5 + 32;
+        console.log(`${this.#celsius} градусів Цельсія перетворилися на ${fahrenheit} градусів Фаренгейта`);
+        return fahrenheit;
+    }
+}
+
+const temp = new Temperature(32);
+temp.fahrenheit;
+
+📝 Завдання №38.2 (Валідація через сетер):
+Створи клас UserAccount, який працює з приватним полем #age.
+Додай приватне поле #age.
+Створи сетер set age(value), який:
+Перевіряє, чи є value числом, більшим або рівним 0.
+Якщо так — присвоює значення в #age.
+Якщо ні — виводить у консоль повідомлення про помилку: "Некоректний вік".
+Додай гетер get age(), який просто повертає #age.
+Створи об'єкт user і спробуй присвоїти йому коректний вік (наприклад, 25) і некоректний (наприклад, -5).
+
+✅ Рішення:
+class UserAccount {
+    #age;
+    set age(value){
+        if(value >= 0){
+            this.#age = value;
+        } else {
+            this.#age = 0;
+            console.log('Некоректний вік');
+        }
+    }
+    get age(){
+        const userAge = this.#age;
+        console.log(userAge);
+        return userAge;
+    }
+}
+
+const firstUser = new UserAccount();
+const secondUser = new UserAccount();
+firstUser.age = 25;
+secondUser.age = -5;
+firstUser.age;
+secondUser.age;
+
+📝 Завдання №38.3 (Конвертер валют):
+Створи клас CurrencyConverter, який зберігає баланс у гривнях (#uah).
+Додай приватне поле #uah.
+Додай сетер set deposit(amount), який приймає суму в гривнях і додає її до #uah, якщо вона більше 0.
+Додай гетер get usd(), який повертає поточний баланс у доларах (поділи #uah на фіксований курс, наприклад, 40).
+Додай гетер get balance(), який повертає просто суму в гривнях.
+
+✅ Рішення:
+class CurrencyConverter{
+    #uah = 0;
+    set deposit(amount){
+        if(amount > 0){
+            this.#uah += amount;
+        }
+    }
+    get balance(){
+        const balance = this.#uah;
+        return balance;
+    }
+    get usd(){
+        return this.#uah / 40;
+    }
+}
+
+const converter = new CurrencyConverter();
+converter.deposit = 200;
+console.log(`Ваш баланс - ${converter.balance} грн`);
+console.log(`Тепер у вас ${converter.usd} долларів`);
+
+📝 Завдання №38.4 (Система доступу до офісу):
+Створи клас OfficeAccess, який керує доступом працівників за допомогою PIN-коду.
+Додай приватне поле #pin.
+Додай конструктор, який приймає та встановлює початковий PIN-код (наприклад, 1234).
+Додай сетер set changePin(newPin), який дозволяє змінити PIN-код, але тільки якщо він складається рівно з 4 цифр (число в діапазоні 1000–9999). 
+Якщо умова не виконується — виведи помилку.
+Додай гетер get isAccessGranted(). Цей гетер має приймати введений код (можливо, додати ще одне приватне поле #attemptedPin) і порівнювати його з #pin. 
+Для простоти давай зробимо так: спочатку створи сетер set enterPin(code), який записує спробу входу, 
+а потім гетер get isAccessGranted(), який повертає true, якщо код правильний, і false, якщо ні.
+
+✅ Рішення:
+class OfficeAccess{
+    #pin;
+    #attemptedPin;
+    constructor(pinCode = '1234'){
+        this.#pin = pinCode;
+    }
+    set changePin(newPin){
+        if(newPin.length === 4){
+            this.#pin = newPin;
+        } else {
+            console.log(`Помилка! Код має складатися з чотирьох чисел!`);
+        }
+    }
+    set enterPin(code){
+        this.#attemptedPin = code;
+    }
+    get isAccessGranted(){
+        if(this.#attemptedPin === this.#pin){
+            return true;
+        } else return false;
+    }
+}
+
+const firstEmployee = new OfficeAccess();
+const secondEmployee = new OfficeAccess();
+const thirdEmployee = new OfficeAccess();
+
+firstEmployee.changePin = '1234';
+secondEmployee.changePin = '4321';
+thirdEmployee.changePin = '123';
+
+firstEmployee.enterPin = '1234';
+secondEmployee.enterPin  = '4231';
+
+console.log(`Доступ дозволено? ${firstEmployee.isAccessGranted}`);
+console.log(`Доступ дозволено? ${secondEmployee.isAccessGranted}`);
+
+📝 Завдання №38.5 (Банківський рахунок з лімітом):
+Створи клас BankAccount, який має захищені дані та логіку обмежень.
+Додай приватне поле #balance.
+Додай конструктор, який приймає початковий баланс (якщо сума від'ємна, встанови #balance у 0).
+Додай сетер set withdraw(amount), який списує кошти з балансу, АЛЕ лише за умови:
+Сума для зняття amount більша за 0.
+На рахунку достатньо коштів (#balance >= amount).
+Якщо умови не виконуються — виведи відповідне повідомлення про помилку ("Недостатньо коштів" або "Некоректна сума").
+Додай гетер get balance(), який повертає поточний стан рахунку.
+
+✅ Рішення:
+class BankAccount{
+    #balance = 0;
+    constructor(balance){
+        this.#balance = balance;
+    }
+    set withdraw(amount){
+        if(amount <= this.#balance){
+            this.#balance -= amount;
+        } else if(amount >= this.#balance){
+            console.log('Недостатньо коштів');
+        } else {
+            console.log('Некоректна сума');
+        }
+    }
+    get balance(){
+        return this.#balance;
+    }
+}
+
+const account = new BankAccount(100);
+account.withdraw = 50;
+console.log(`На рахунку залишилось ${account.balance} грн`);
+account.withdraw = 60;
