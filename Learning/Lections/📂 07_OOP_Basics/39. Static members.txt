@@ -1,0 +1,164 @@
+Тема №39: Статичні методи та властивості (Static members) 🏗️
+Статичні члени класу — це інструменти, які належать самому класу, а не окремим об'єктам (екземплярам), створеним на його основі. 🧐
+
+🧠 Як це працює:
+Звичайні властивості (як #balance у банківському рахунку) зберігають унікальні дані кожного користувача. 
+Статичні ж члени є спільними для всіх. Це як загальна інформація, доступна всім об'єктам одного типу.
+
+🚀 Основні правила:
+💎 Ключове слово static: Ми позначаємо ним властивості або методи, які хочемо зробити статичними.
+🖇️ Виклик через клас: Доступ здійснюється напряму через назву класу, наприклад: Клас.метод(). Створювати об'єкт через new для цього не потрібно!
+🚫 Відсутність this: Статичні методи не мають доступу до конкретного об'єкта через this, тому вони не можуть працювати зі звичайними властивостями класу.
+
+🖌 Приклад для розуміння:
+Уяви, що у нас є клас User, і нам потрібно рахувати, скільки всього користувачів ми зареєстрували в системі.
+class User {
+  static totalUsers = 0; // 📊 Статична властивість для лічильника
+
+  constructor(name) {
+    this.name = name;
+    User.totalUsers++; // 📈 Збільшуємо лічильник при створенні нового користувача
+  }
+}
+Тут totalUsers належить усьому класу User. Скільки б об'єктів ми не створили, всі вони будуть оновлювати одну й ту саму статичну змінну User.totalUsers.
+
+📝 Завдання №39.1 (Створення статичного методу):
+Спробуй створити клас MathHelper, який не буде зберігати дані користувача, а буде лише виконувати корисні дії. 
+Додай до нього статичний метод square(number), який повертає квадрат числа.
+
+✅ Рішення:
+class MathHelper {
+    static square(number) {
+        return number * number; // 🔢 Ми просто повертаємо результат обчислення
+    }
+}
+console.log(MathHelper.square(5));
+
+📝 Завдання №39.2 (Система реєстрації ID):
+Створи клас User, який автоматично присвоює унікальний номер (id) кожному новому користувачеві.
+Додай статичну властивість #nextId, яка буде зберігати число (почни з 1). Ми робимо її приватною #, щоб ніхто ззовні не міг "зламати" наш лічильник.
+Створи статичний метод getNextId(), який буде повертати поточне значення #nextId і одразу збільшувати його на 1.
+У конструкторі класу User присвоюй кожному новому об'єкту властивість this.id, отримуючи її через виклик User.getNextId().
+Створи декількох користувачів (user1, user2) і виведи їхні id в консоль.
+
+✅ Рішення:
+class User {
+    static #nextId = 1;
+    static getNextId(){
+        return this.#nextId++;
+    }
+    constructor(){
+        this.id = User.getNextId();
+    }
+}
+
+const user1 = new User();
+const user2 = new User();
+const user3 = new User();
+console.log(user1);
+console.log(user2);
+console.log(user3);
+
+📝 Завдання №39.3 (Конвертер валют):
+Створи клас CurrencyConverter, який не потрібно створювати через new.
+Додай статичну властивість #rateUSD (курс долара до гривні, наприклад, 41.5).
+Додай статичний метод toUAH(amount), який приймає суму в доларах і повертає її в гривнях, помноживши на #rateUSD.
+Додай статичний метод setRate(newRate), який дозволяє змінити значення #rateUSD (обов'язково додай перевірку, щоб newRate був числом і більшим за 0).
+
+✅ Рішення:
+class CurrencyConverter{
+    static #rateUSD = 41.5;
+    static toUAH(amount){
+        return amount * this.#rateUSD;
+    }
+    static setRate(newRate){
+        if(newRate > 0){
+            this.#rateUSD = newRate;
+        }
+    }
+}
+
+console.log(CurrencyConverter.toUAH(100));
+
+📝 Завдання №39.4 (Система розширеної логіки):
+Створи клас AppConfig, який буде керувати налаштуваннями програми.
+Додай статичну властивість theme (початкове значення 'light').
+Додай статичний метод toggleTheme(), який змінює theme на 'dark', якщо зараз 'light', і навпаки.
+Додай статичний метод showTheme(), який просто виводить у консоль поточну тему в форматі: "Поточна тема: ...".
+Спробуй перемкнути тему кілька разів через AppConfig.toggleTheme() і вивести її через AppConfig.showTheme().
+
+✅ Рішення:
+class AppConfig {
+    static #theme = 'light';
+    static toggleTheme(){
+        if(this.#theme === 'light'){
+            this.#theme = 'dark';
+        } else this.#theme= 'light';
+    }
+    static showTheme(){
+        console.log(`Поточна тема: ${this.#theme}`);
+    }
+}
+
+AppConfig.toggleTheme();
+AppConfig.showTheme(); // Поточна тема: dark
+AppConfig.toggleTheme();
+AppConfig.showTheme(); // Поточна тема: light
+
+📝 Завдання №39.5 (Фабрика користувачів):
+Уяви, що у тебе є система користувачів, і тобі потрібно створювати різні типи користувачів (наприклад, Admin або Guest) залежно від ситуації. 
+Замість того, щоб в кожному місці коду писати new User(), ти створюєш статичний метод, який "фабрикує" (створює) об'єкт за тебе.
+Створи клас UserFactory. Цей клас не повинен мати конструктора, він служить лише для створення об'єктів.
+Створи клас User (простий, з полями name та role).
+Додай у клас UserFactory статичний метод createAdmin(name), який повертає новий об'єкт new User(name, 'admin').
+Додай статичний метод createGuest(name), який повертає новий об'єкт new User(name, 'guest').
+Створи користувачів, використовуючи лише UserFactory.createAdmin(...) та UserFactory.createGuest(...).
+
+✅ Рішення:
+class UserFactory{
+    static createAdmin(name){
+        return new User(name, 'admin');
+    }
+    static createGuest(name){
+        return new User(name, 'guest');
+    }
+}
+
+class User {
+    constructor(name, role){
+        this.name = name;
+        this.role = role;
+    }
+}
+
+console.log(UserFactory.createAdmin('Іван'));
+console.log(UserFactory.createGuest('Валерія'));
+console.log(UserFactory.createGuest('Наталія'));
+console.log(UserFactory.createGuest('Сергій'));
+console.log(UserFactory.createGuest('Олег'));
+
+📝 Завдання №39.6 (Статичний кеш):
+Створи клас DataCache, який буде імітувати сховище даних у пам'яті.
+Додай статичну властивість #data (об'єкт {}).
+Додай статичний метод set(key, value), який зберігає значення за ключем у #data.
+Додай статичний метод get(key), який повертає значення за ключем.
+Додай статичний метод clear(), який робить #data знову порожнім об'єктом.
+
+✅ Рішення:
+class DataCache{
+    static #data = {};
+    static set(key, value){
+        this.#data[key] = value;
+    }
+    static get(key){
+        return this.#data[key];
+    }
+    static clear(){
+        this.#data = {};
+    }
+}
+
+DataCache.set(1, 'Clothes');
+DataCache.set(2, 'Food');
+DataCache.set(3, 'Technic');
+console.log(DataCache.get(2)); // Food
